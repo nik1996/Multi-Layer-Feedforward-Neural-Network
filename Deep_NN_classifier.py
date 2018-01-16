@@ -7,6 +7,15 @@ from PIL import Image
 from scipy import ndimage
 from dnn_app_utils_v2 import *
 
+from Forward_back_prop import initialize_parameters
+from Forward_back_prop import initialize_parameters_deep
+from Forward_back_prop import linear_activation_forward
+from Forward_back_prop import compute_cost
+from Forward_back_prop import linear_activation_backward
+from Forward_back_prop import update_parameters
+from Forward_back_prop import L_model_forward
+from Forward_back_prop import L_model_backward
+
 %matplotlib inline
 plt.rcParams['figure.figsize'] = (5.0, 4.0) # set default size of plots
 plt.rcParams['image.interpolation'] = 'nearest'
@@ -18,16 +27,11 @@ plt.rcParams['image.cmap'] = 'gray'
 np.random.seed(1)
 
 ########################################################################################################################
+                                                """Data Preprocessing"""
 
-
-#######################################################################################################################
+########################################################################################################################
 
 train_x_orig, train_y, test_x_orig, test_y, classes = load_data()
-
-# Example of a picture
-index = 10
-plt.imshow(train_x_orig[index])
-print ("y = " + str(train_y[0,index]) + ". It's a " + classes[train_y[0,index]].decode("utf-8") +  " picture.")
 
 # Explore your dataset
 m_train = train_x_orig.shape[0]
@@ -60,7 +64,10 @@ n_h = 7
 n_y = 1
 layers_dims = (n_x, n_h, n_y)
 
-# GRADED FUNCTION: two_layer_model
+########################################################################################################################
+                                                """Two layer NN classifier"""
+
+########################################################################################################################
 
 def two_layer_model(X, Y, layers_dims, learning_rate = 0.0075, num_iterations = 3000, print_cost=False):
     """
@@ -152,19 +159,17 @@ def two_layer_model(X, Y, layers_dims, learning_rate = 0.0075, num_iterations = 
 
     return parameters
 
-####################################################################################################################
-
-
-####################################################################################################################
-
 predictions_train = predict(train_x, train_y, parameters)   #1.0
 
-predictions_test = predict(test_x, test_y, parameters)    #0.72
+predictions_test = predict(test_x, test_y, parameters)    #0.72 --->72% accuracy
+
+####################################################################################################################
+                                                """L-layer NN classifier"""
+
+####################################################################################################################
 
 ### CONSTANTS ###
 layers_dims = [12288, 20, 7, 5, 1] #  5-layer model
-
-# GRADED FUNCTION: L_layer_model
 
 def L_layer_model(X, Y, layers_dims, learning_rate = 0.0075, num_iterations = 3000, print_cost=False):#lr was 0.009
     """
@@ -228,13 +233,10 @@ def L_layer_model(X, Y, layers_dims, learning_rate = 0.0075, num_iterations = 30
 
     return parameters
 
-################################################
-
-
-###############################################
-
 parameters = L_layer_model(train_x, train_y, layers_dims, num_iterations = 2500, print_cost = True)
 
 pred_train = predict(train_x, train_y, parameters)  #0.985645933014
 
-pred_test = predict(test_x, test_y, parameters)   #0.8
+pred_test = predict(test_x, test_y, parameters)   #0.8 ---> 80% accuracy
+
+#######################################################################################################################
